@@ -16,9 +16,9 @@ var ObjectID = require("mongodb").ObjectID;
 var ThreadHandler = require('../controllers/threadHandler.js');
 
 module.exports = function(app) {
-  const DB_URI="mongodb+srv://user001:SR9nRZ0gOr8uQJSs@cluster0-lskl2.mongodb.net/test?retryWrites=true&w=majority";
-  //const client = new MongoClient(process.env.DB, {useUnifiedTopology: true});
-  const client = new MongoClient(DB_URI, {useUnifiedTopology: true});
+  
+  const client = new MongoClient(process.env.DB, {useUnifiedTopology: true});
+
   let db = null;
   const dbName = "FCC_Mesg_DB";
   const dbTable = "Boards_Delete"; // delete after cleanup

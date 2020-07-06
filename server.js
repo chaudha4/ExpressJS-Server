@@ -10,6 +10,8 @@ var apiRoutes         = require('./routes/api.js');
 var fccTestingRoutes  = require('./routes/fcctesting.js');
 var runner            = require('./test-runner');
 
+require('dotenv').config(); // load .env file into env variables.
+
 var app = express();
 
 // The following takes control of dnsPrefetchControl, frameguard
@@ -61,6 +63,8 @@ function notFoundMW() {
   });
   resolve();
 })};
+
+console.log(process.env.DB);
 
 //Start our server and tests!
 function startServer() {

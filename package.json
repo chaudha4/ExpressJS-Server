@@ -10,18 +10,19 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.14.0",
-    "cors": "^2.8.1",
-    "body-parser": "^1.15.2",
-    "chai": "^3.5.0",
-    "mongodb": "^3.5.5",
-    "chai-http": "^3.0.0",
-    "mocha": "^3.2.0",
-    "zombie": "^5.0.5",
-    "helmet": "^3.21.3"
+    "express": "latest",
+    "cors": "latest",
+    "body-parser": "latest",
+    "chai": "latest",
+    "mongodb": "latest",
+    "chai-http": "latest",
+    "mocha": "latest",
+    "zombie": "latest",
+    "helmet": "latest",
+    "dotenv": "latest"
   },
   "engines": {
-    "node": "4.4.3"
+    "node": "latest"
   },
   "repository": {
     "type": "git",
