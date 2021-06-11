@@ -15,6 +15,10 @@ This project implements a server that supports following APIs.
 1. Update a thread named thread1 with new password:  
 ```curl -X PUT -d text="thread1" -d delete_password="newpwd"  http://localhost:4000/api/threads/mesg1```
 
+Some test commands
+1. Get all threads:
+`curl -X GET  http://localhost:4000/api/test/getAllThreads`
+
 ## Setup
 
 Create a .env file at root and provide following information.

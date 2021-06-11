@@ -42,12 +42,11 @@ app.use(cookieParser());
 
 app.get("/api/test/createDatabase", mesgBoard.createDatabase);
 app.get("/api/test/readDatabase", mesgBoard.readDatabase);
-app.get("/api/test/createContainer/:board", mesgBoard.createBoard);
-app.get("/api/test/readContainer/:board", mesgBoard.getBoard);
+app.get("/api/test/getAllThreads", mesgBoard.getAllThreads);
 
 // Board
 
-app.get("/api/boards/:board", mesgBoard.getBoard);
+app.get("/api/boards/:board", mesgBoard.getAllThreads);
 app.post("/api/boards/:board", mesgBoard.createBoard);
 app.delete("/api/boards/:board", mesgBoard.deleteBoard);
 
@@ -66,7 +65,6 @@ app.use(function (req, res, next) {
   mesg += " not supported.\n";
   res.status(404).type("text").send(mesg);
 });
-
 
 const port = process.env.PORT || 4000;
 app.listen(port);
