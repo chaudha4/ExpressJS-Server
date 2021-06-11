@@ -1,95 +1,73 @@
-'use strict';
+"use strict";
 
-var express     = require('express');
-var bodyParser  = require('body-parser');
-var expect      = require('chai').expect;
-var cors        = require('cors');
-var helmet      = require('helmet');
+const express = require("express");
+var bodyParser = require("body-parser");
+//var expect = require("chai").expect;
+var cors = require("cors");
+var helmet = require("helmet");
+var cookieParser = require("cookie-parser");
 
-var apiRoutes         = require('./routes/api.js');
-var fccTestingRoutes  = require('./routes/fcctesting.js');
-var runner            = require('./test-runner');
+var mesgBoard = require("./mesgBoard");
 
-require('dotenv').config(); // load .env file into env variables.
+require("dotenv").config(); // load .env file into env variables.
 
-var app = express();
+const app = express();
 
-// The following takes control of dnsPrefetchControl, frameguard
-// hidePoweredBy, hsts, ieNoOpen, noSniff, xssFilter by deafult
-app.use(helmet()); 
+// Add middleware to the global processing stack - start
+
+// Helmet can help protect your app from some well-known web vulnerabilities by setting HTTP headers appropriately.
+app.use(helmet());
 
 // Only allow your site to send the referrer for your own pages.
-app.use(helmet.referrerPolicy({ policy: 'same-origin' }))
+app.use(helmet.referrerPolicy({ policy: "same-origin" }));
 
 //Only allow your site to be loading in an iFrame on your own pages.
-app.use(helmet.frameguard({ action: 'sameorigin' }))
+app.use(helmet.frameguard({ action: "sameorigin" }));
 
-app.use('/public', express.static(process.cwd() + '/public'));
+// To serve static files, use the express.static built-in middleware function in Express.
+//app.use('/public', express.static(process.cwd() + '/public'));
+app.use(express.static("public"));
 
-app.use(cors({origin: '*'})); //For FCC testing purposes only
+app.use(cors({ origin: "*" })); //For FCC testing purposes only
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//Sample front-end
-app.route('/b/:board/')
-  .get(function (req, res) {
-    res.sendFile(process.cwd() + '/views/board.html');
-  });
-app.route('/b/:board/:threadid')
-  .get(function (req, res) {
-    res.sendFile(process.cwd() + '/views/thread.html');
-  });
+// Parse Cookie header and populate req.cookies with an object keyed by the cookie names.
+app.use(cookieParser());
 
-//Index page (static HTML)
-app.route('/')
-  .get(function (req, res) {
-    res.sendFile(process.cwd() + '/views/index.html');
-  });
+// Add middleware to the global processing stack - end
 
-//For FCC testing purposes
-fccTestingRoutes(app);
+// Test - Using GET for everything to keep testing simple.
 
+app.get("/api/test/createDatabase", mesgBoard.createDatabase);
+app.get("/api/test/readDatabase", mesgBoard.readDatabase);
+app.get("/api/test/createContainer/:board", mesgBoard.createBoard);
+app.get("/api/test/readContainer/:board", mesgBoard.getBoard);
 
-//Sample Front-end
+// Board
 
+app.get("/api/boards/:board", mesgBoard.getBoard);
+app.post("/api/boards/:board", mesgBoard.createBoard);
+app.delete("/api/boards/:board", mesgBoard.deleteBoard);
 
-function notFoundMW() {
-  return new Promise((resolve, reject) => {
-  app.use(function(req, res, next) {
-    res.status(404)
-      .type('text')
-      .send('Not Found');
-  });
-  resolve();
-})};
+// Thread
+app.get("/api/threads/:board", mesgBoard.getThreads);
+app.post("/api/threads/:board", mesgBoard.createThread);
+app.put("/api/threads/:board", mesgBoard.updateThread);
 
-console.log(process.env.DB);
+// Handle unsupported requests
 
-//Start our server and tests!
-function startServer() {
-  return new Promise((resolve, reject) => {
-    app.listen(process.env.PORT || 3000, function () {
-      console.log("Listening on port " + this.address().port);
-      if(process.env.NODE_ENV==='test') {
-        console.log('Running Tests...');
-        setTimeout(function () {
-          try {
-            runner.run();
-          } catch(e) {
-            var error = e;
-              console.log('Tests are not valid:');
-              console.log(error);
-          }
-        }, 1500);
-      }
-    });
-    resolve();
-  });  
-}
-
-//Routing for API 
-apiRoutes(app).then(notFoundMW).then(startServer);   
+app.use(function (req, res, next) {
+  var mesg = "";
+  if (req) {
+    mesg += " " + req.method + " " + req.url;
+  }
+  mesg += " not supported.\n";
+  res.status(404).type("text").send(mesg);
+});
 
 
-module.exports = app; //for testing
+const port = process.env.PORT || 4000;
+app.listen(port);
+console.log("Listening on port " + port);

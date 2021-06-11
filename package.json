@@ -3,23 +3,25 @@
   "//2": "https://docs.npmjs.com/files/package.json",
   "//3": "updating this file will download and update your packages",
   "name": "message-board",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "A Message Board. Backend uses Mongo DB",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "latest",
-    "cors": "latest",
     "body-parser": "latest",
     "chai": "latest",
-    "mongodb": "latest",
     "chai-http": "latest",
-    "mocha": "latest",
-    "zombie": "latest",
+    "cookie-parser": "^1.4.5",
+    "cors": "latest",
+    "dotenv": "latest",
+    "express": "latest",
     "helmet": "latest",
-    "dotenv": "latest"
+    "mocha": "latest",
+    "mongodb": "latest",
+    "zombie": "latest",
+    "@azure/cosmos": "3.9.1"
   },
   "engines": {
     "node": "latest"
